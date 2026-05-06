@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MGP, C.A. — Ingeniería, Procura y Construcción</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul:    #162033;
+    --naranja: #E36B1F;
+    --blanco:  #FFFFFF;
+    --gris:    #F5F7FA;
+    --azul-mid: #1e2e47;
+    --naranja2: #f07c33;
+    --nav-h: 64px;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    color: var(--azul);
+    background: var(--blanco);
+    overflow-x: hidden;
+  }
+
+  section[id] { scroll-margin-top: var(--nav-h); }
+
+  /* ═══════════════════════════════════════
+     NAV
+  ═══════════════════════════════════════ */
+  nav {
+    position: fixed;
+    inset-block-start: 0; left:0; right:0;
+    z-index: 300;
+    background: var(--azul);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 2px 24px rgba(0,0,0,.4);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; z-index: 310;
+  }
+  .nav-logo svg { width:36px; height:36px; flex-shrink:0; }
+  .nav-logo-text { color:var(--blanco); font-size:20px; font-weight:800; letter-spacing:2px; }
+
+  .nav-links { display:flex; gap:24px; list-style:none; }
+  .nav-links a {
+    color: rgba(255,255,255,.72);
+    text-decoration: none;
+    font-size: 11px; font-weight:600;
+    letter-spacing: 1px; text-transform:uppercase;
+    transition: color .2s;
+    position: relative; padding-bottom:4px;
+    white-space: nowrap;
+  }
+  .nav-links a::after {
+    content:''; position:absolute; bottom:0; left:0;
+    width:0; height:2px; background:var(--naranja);
+    transition: width .3s;
+  }
+  .nav-links a:hover { color:var(--blanco); }
+  .nav-links a:hover::after { width:100%; }
+
+  /* hamburger */
+  .hamburger {
+    display:none; flex-direction:column; gap:5px;
+    background:none; border:none; cursor:pointer; padding:4px; z-index:310;
+  }
+  .hamburger span {
+    display:block; width:24px; height:2px;
+    background:var(--blanco); border-radius:2px; transition:all .3s;
+  }
+  .hamburger.open span:nth-child(1){ transform:rotate(45deg) translate(5px,5px); }
+  .hamburger.open span:nth-child(2){ opacity:0; }
+  .hamburger.open span:nth-child(3){ transform:rotate(-45deg) translate(5px,-5px); }
+
+  .mobile-menu {
+    display:none; position:fixed;
+    top:var(--nav-h); left:0; right:0;
+    background:var(--azul-mid);
+    z-index:290;
+    flex-direction:column;
+    padding:8px 0 16px;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a {
+    color:rgba(255,255,255,.85);
+    text-decoration:none; font-size:14px; font-weight:600;
+    letter-spacing:1px; text-transform:uppercase;
+    padding:14px 24px;
+    border-left:3px solid transparent;
+    transition:all .2s;
+  }
+  .mobile-menu a:hover { color:var(--blanco); border-left-color:var(--naranja); background:rgba(255,255,255,.05); }
+
+  /* ═══════════════════════════════════════
+     HERO
+  ═══════════════════════════════════════ */
+  #hero {
+    min-height:100vh;
+    padding-top:var(--nav-h);
+    background:var(--azul);
+    position:relative;
+    display:flex; align-items:center;
+    overflow:hidden;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background-image:url('https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=1600&q=80');
+    background-size:cover; background-position:center;
+    opacity:.14;
+  }
+  .hero-shape {
+    position:absolute; right:-80px; top:-80px;
+    width:500px; height:500px; border-radius:50%;
+    background:var(--naranja); opacity:.09;
+  }
+  .hero-line {
+    position:absolute; left:0; bottom:0;
+    width:100%; height:4px;
+    background:linear-gradient(to right, var(--naranja), transparent);
+  }
+  .hero-inner {
+    position:relative; z-index:2;
+    width:100%; padding:60px 40px;
+    display:flex; flex-direction:column; gap:48px;
+  }
+  .hero-content { max-width:660px; }
+  .hero-tag {
+    display:inline-block; background:var(--naranja); color:var(--blanco);
+    font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+    padding:5px 14px; border-radius:2px; margin-bottom:22px;
+  }
+  .hero-title {
+    font-size:clamp(30px,5vw,62px); font-weight:800;
+    color:var(--blanco); line-height:1.08; margin-bottom:18px;
+  }
+  .hero-title span { color:var(--naranja); }
+  .hero-desc {
+    color:rgba(255,255,255,.7); font-size:15px;
+    line-height:1.8; max-width:520px; margin-bottom:34px;
+  }
+  .hero-cta {
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--naranja); color:var(--blanco);
+    text-decoration:none; font-size:12px; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase;
+    padding:13px 30px; border-radius:3px;
+    transition:background .2s, transform .2s;
+  }
+  .hero-cta:hover { background:var(--naranja2); transform:translateY(-2px); }
+
+  .hero-stats { display:flex; flex-wrap:wrap; gap:12px; }
+  .stat {
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.12);
+    border-left:3px solid var(--naranja);
+    padding:15px 22px; flex:1; min-width:140px;
+  }
+  .stat-num { font-size:17px; font-weight:800; color:var(--blanco); line-height:1; }
+  .stat-label { font-size:9px; font-weight:600; color:rgba(255,255,255,.5); letter-spacing:1.2px; text-transform:uppercase; margin-top:4px; }
+
+  /* ═══════════════════════════════════════
+     SHARED SECTION HELPERS
+  ═══════════════════════════════════════ */
+  .sec { padding:80px 40px; }
+
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:10px;
+    font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+    color:var(--naranja); margin-bottom:12px;
+  }
+  .eyebrow::before { content:''; width:22px; height:2px; background:var(--naranja); flex-shrink:0; }
+
+  .sec-title {
+    font-size:clamp(22px,3.2vw,38px); font-weight:800;
+    color:var(--azul); line-height:1.15; margin-bottom:14px;
+  }
+  .sec-title.white { color:var(--blanco); }
+
+  .sec-body { font-size:14px; line-height:1.85; color:#4a5568; }
+  .sec-body.white { color:rgba(255,255,255,.7); }
+
+  /* ═══════════════════════════════════════
+     QUIÉNES SOMOS
+  ═══════════════════════════════════════ */
+  #quienes { background:var(--gris); }
+
+  .quienes-grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:60px; align-items:center;
+  }
+  .quienes-visual { position:relative; }
+  .quienes-img {
+    width:100%; height:400px;
+    background:linear-gradient(135deg,var(--azul),var(--azul-mid));
+    border-radius:4px; display:flex; align-items:center; justify-content:center;
+  }
+  .quienes-img svg { opacity:.11; width:140px; }
+  .quienes-badge {
+    position:absolute; bottom:-18px; right:-14px;
+    background:var(--naranja); color:var(--blanco);
+    width:116px; height:116px; border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    box-shadow:0 8px 28px rgba(227,107,31,.4);
+  }
+  .quienes-badge-num  { font-size:22px; font-weight:800; line-height:1; }
+  .quienes-badge-text { font-size:8.5px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:4px; padding:0 10px; line-height:1.3; }
+
+  .pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:26px; }
+  .pill {
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--blanco); border:1px solid #e2e8f0;
+    color:var(--azul); font-size:12px; font-weight:600;
+    padding:6px 12px; border-radius:2px;
+  }
+
+  /* ═══════════════════════════════════════
+     MISIÓN & VISIÓN
+  ═══════════════════════════════════════ */
+  #mision { display:grid; grid-template-columns:1fr 1fr; gap:2px; padding:0; }
+  .mv-card { padding:52px 44px; position:relative; overflow:hidden; }
+  .mv-card:first-child { background:var(--azul-mid); }
+  .mv-card:last-child  { background:var(--naranja); }
+  .mv-icon {
+    width:50px; height:50px; border-radius:4px;
+    display:flex; align-items:center; justify-content:center; margin-bottom:22px;
+  }
+  .mv-card:first-child .mv-icon { background:rgba(227,107,31,.15); color:var(--naranja); }
+  .mv-card:last-child  .mv-icon { background:rgba(255,255,255,.2); color:var(--blanco); }
+  .mv-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; }
+  .mv-card:first-child .mv-label { color:var(--naranja); }
+  .mv-card:last-child  .mv-label { color:rgba(255,255,255,.65); }
+  .mv-title { font-size:22px; font-weight:800; color:var(--blanco); margin-bottom:14px; }
+  .mv-text  { font-size:14px; line-height:1.85; color:rgba(255,255,255,.75); }
+  .mv-deco  { position:absolute; bottom:-40px; right:-40px; width:130px; height:130px; border-radius:50%; border:2px solid rgba(255,255,255,.1); }
+
+  /* ═══════════════════════════════════════
+     SERVICIOS
+  ═══════════════════════════════════════ */
+  #servicios { background:var(--blanco); }
+  .servicios-intro {
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:24px; flex-wrap:wrap; margin-bottom:44px;
+  }
+  .servicios-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:#e2e8f0; }
+  .s-card {
+    background:var(--blanco); padding:30px 22px;
+    position:relative; overflow:hidden; transition:background .3s;
+  }
+  .s-card::before { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:var(--naranja); transition:width .4s; }
+  .s-card:hover { background:var(--gris); }
+  .s-card:hover::before { width:100%; }
+  .s-num  { font-size:34px; font-weight:800; color:var(--gris); line-height:1; margin-bottom:12px; }
+  .s-icon { width:36px; height:36px; color:var(--naranja); margin-bottom:12px; }
+  .s-title{ font-size:13px; font-weight:700; color:var(--azul); margin-bottom:8px; line-height:1.3; }
+  .s-text { font-size:12px; color:#718096; line-height:1.7; }
+
+  /* ═══════════════════════════════════════
+     CATALYST GROUP  (nueva sección)
+  ═══════════════════════════════════════ */
+  #catalyst { background:var(--azul); }
+
+  .catalyst-grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:64px; align-items:start;
+  }
+
+  .catalyst-left { }
+  .catalyst-left .eyebrow::before { background:var(--naranja); }
+
+  .catalyst-desc {
+    font-size:14px; line-height:1.9;
+    color:rgba(255,255,255,.7); margin-bottom:36px;
+  }
+
+  .catalyst-highlight {
+    background:rgba(227,107,31,.12);
+    border-left:3px solid var(--naranja);
+    padding:20px 24px;
+    font-size:14px; font-weight:600;
+    color:var(--blanco); line-height:1.6;
+    margin-bottom:36px; border-radius:0 3px 3px 0;
+  }
+
+  .catalyst-metals {
+    display:flex; flex-wrap:wrap; gap:10px; margin-bottom:36px;
+  }
+  .metal-tag {
+    display:inline-flex; align-items:center; gap:7px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(227,107,31,.35);
+    color:var(--blanco); font-size:12px; font-weight:600;
+    padding:7px 14px; border-radius:2px;
+    letter-spacing:.5px;
+  }
+  .metal-tag::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--naranja); flex-shrink:0; }
+
+  .catalyst-right { }
+
+  .impact-title {
+    font-size:12px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; color:var(--naranja);
+    margin-bottom:20px;
+  }
+
+  .impact-list { display:flex; flex-direction:column; gap:14px; }
+  .impact-item {
+    display:flex; align-items:flex-start; gap:14px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    padding:18px 20px; border-radius:3px;
+    transition:background .2s, border-color .2s;
+  }
+  .impact-item:hover { background:rgba(227,107,31,.1); border-color:rgba(227,107,31,.3); }
+  .impact-icon {
+    width:38px; height:38px; border-radius:4px;
+    background:rgba(227,107,31,.15);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--naranja); flex-shrink:0;
+  }
+  .impact-text { font-size:13px; font-weight:500; color:rgba(255,255,255,.85); line-height:1.55; }
+  .impact-text strong { display:block; font-weight:700; color:var(--blanco); margin-bottom:3px; font-size:13px; }
+
+  .catalyst-footer {
+    margin-top:36px;
+    font-size:14px; font-weight:600;
+    color:var(--blanco);
+    border-top:1px solid rgba(255,255,255,.1);
+    padding-top:24px;
+    line-height:1.7;
+  }
+  .catalyst-footer span { color:var(--naranja); }
+
+  /* ═══════════════════════════════════════
+     EXPERIENCIA
+  ═══════════════════════════════════════ */
+  #experiencia { background:var(--gris); }
+  .exp-intro { margin-bottom:40px; }
+  .exp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .exp-item {
+    display:flex; align-items:flex-start; gap:12px;
+    background:var(--blanco); padding:13px 15px;
+    border-radius:3px; border-left:3px solid transparent;
+    transition:border-color .2s, transform .2s;
+  }
+  .exp-item:hover { border-left-color:var(--naranja); transform:translateX(3px); }
+  .exp-dot  { width:7px; height:7px; border-radius:50%; background:var(--naranja); flex-shrink:0; margin-top:5px; }
+  .exp-text { font-size:12px; font-weight:500; color:var(--azul); line-height:1.5; }
+
+  /* ═══════════════════════════════════════
+     EQUIPOS
+  ═══════════════════════════════════════ */
+  #equipos { background:var(--blanco); }
+  .tabs-wrap { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:30px; background:var(--gris); padding:4px; border-radius:4px; width:fit-content; max-width:100%; }
+  .tab-btn {
+    padding:8px 18px; font-family:'Montserrat',sans-serif;
+    font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase;
+    border:none; background:transparent; color:#718096;
+    border-radius:3px; cursor:pointer; transition:all .2s; white-space:nowrap;
+  }
+  .tab-btn.active { background:var(--azul); color:var(--blanco); }
+  .tab-content { display:none; }
+  .tab-content.active {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    gap:10px; animation:fadeUp .35s ease;
+  }
+  .eq-item {
+    display:flex; align-items:center; gap:10px;
+    padding:12px 15px; background:var(--gris);
+    border-radius:3px; font-size:13px; font-weight:500; color:var(--azul);
+    transition:background .2s;
+  }
+  .eq-item:hover { background:#edf2f7; }
+  .eq-item::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--naranja); flex-shrink:0; }
+
+  /* ═══════════════════════════════════════
+     CONTACTO
+  ═══════════════════════════════════════ */
+  #contacto { background:var(--azul); }
+
+  .contacto-grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:56px; align-items:start;
+  }
+
+  .contacto-desc { color:rgba(255,255,255,.65); font-size:14px; line-height:1.85; margin-bottom:32px; }
+
+  /* Contact cards */
+  .contact-cards { display:flex; flex-direction:column; gap:16px; }
+  .contact-card {
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    border-left:3px solid var(--naranja);
+    padding:18px 20px;
+    border-radius:0 3px 3px 0;
+  }
+  .contact-card-name {
+    font-size:13px; font-weight:700; color:var(--blanco);
+    margin-bottom:10px;
+  }
+  .contact-card-rows { display:flex; flex-direction:column; gap:7px; }
+  .contact-row {
+    display:flex; align-items:center; gap:10px;
+    font-size:13px; font-weight:400; color:rgba(255,255,255,.75);
+  }
+  .contact-row svg { color:var(--naranja); flex-shrink:0; }
+  .contact-row a { color:rgba(255,255,255,.75); text-decoration:none; transition:color .2s; }
+  .contact-row a:hover { color:var(--naranja); }
+
+  /* Address block */
+  .address-block {
+    display:flex; align-items:flex-start; gap:14px;
+    margin-top:24px;
+    background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+    padding:18px 20px; border-radius:3px;
+  }
+  .address-icon {
+    width:38px; height:38px; border-radius:4px;
+    background:rgba(227,107,31,.15); display:flex; align-items:center; justify-content:center;
+    color:var(--naranja); flex-shrink:0;
+  }
+  .address-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:4px; }
+  .address-value { font-size:13px; font-weight:400; color:rgba(255,255,255,.8); line-height:1.6; }
+
+  /* Form */
+  .contacto-right { background:var(--blanco); padding:40px; border-radius:4px; }
+  .contacto-right h3 { font-size:18px; font-weight:700; color:var(--azul); margin-bottom:24px; }
+  .form-group { margin-bottom:14px; }
+  .form-label { display:block; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--azul); margin-bottom:6px; }
+  .form-input {
+    width:100%; padding:11px 14px;
+    font-family:'Montserrat',sans-serif; font-size:14px; color:var(--azul);
+    background:var(--gris); border:1.5px solid #e2e8f0;
+    border-radius:3px; outline:none; transition:border-color .2s;
+  }
+  .form-input:focus { border-color:var(--naranja); background:var(--blanco); }
+  textarea.form-input { resize:vertical; min-height:100px; }
+  .form-submit {
+    width:100%; padding:13px;
+    font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700;
+    letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--blanco); background:var(--naranja);
+    border:none; border-radius:3px; cursor:pointer;
+    transition:background .2s, transform .2s; margin-top:6px;
+  }
+  .form-submit:hover { background:var(--naranja2); transform:translateY(-1px); }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+  footer {
+    background:#0d1624; padding:22px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:8px;
+  }
+  .footer-logo { color:var(--blanco); font-size:16px; font-weight:800; letter-spacing:2px; }
+  .footer-copy { font-size:11px; color:rgba(255,255,255,.4); font-weight:400; }
+  .footer-rif  { font-size:11px; color:rgba(255,255,255,.4); font-weight:600; letter-spacing:1px; }
+
+  /* ═══════════════════════════════════════
+     DIVIDER
+  ═══════════════════════════════════════ */
+  .divider { height:4px; background:linear-gradient(to right,var(--naranja),transparent); }
+
+  /* ═══════════════════════════════════════
+     ANIMATIONS / REVEAL
+  ═══════════════════════════════════════ */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+  .reveal { opacity:0; transform:translateY(22px); transition:opacity .65s ease,transform .65s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+  /* ═══════════════════════════════════════
+     TABLET  769–1024
+  ═══════════════════════════════════════ */
+  @media(min-width:769px) and (max-width:1024px){
+    nav { padding:0 24px; }
+    .nav-links { gap:16px; }
+    .nav-links a { font-size:10px; }
+    .hero-inner,.sec { padding-left:28px; padding-right:28px; }
+    .quienes-grid   { gap:40px; }
+    .quienes-img    { height:320px; }
+    .servicios-grid { grid-template-columns:repeat(2,1fr); }
+    .exp-grid       { grid-template-columns:repeat(2,1fr); }
+    .catalyst-grid  { gap:40px; }
+    .contacto-grid  { gap:36px; }
+    .mv-card        { padding:44px 32px; }
+    footer          { padding:22px 28px; }
+  }
+
+  /* ═══════════════════════════════════════
+     MOBILE  ≤ 768
+  ═══════════════════════════════════════ */
+  @media(max-width:768px){
+    :root{ --nav-h:60px; }
+
+    nav { padding:0 20px; }
+    .nav-links { display:none; }
+    .hamburger { display:flex; }
+
+    .hero-inner  { padding:32px 20px 48px; gap:28px; }
+    .hero-title  { font-size:28px; }
+    .hero-desc   { font-size:13px; }
+    .hero-cta    { font-size:12px; padding:12px 22px; }
+    .hero-stats  { flex-direction:column; gap:10px; }
+
+    .sec { padding:52px 20px; }
+
+    /* quienes */
+    .quienes-grid { grid-template-columns:1fr; gap:36px; }
+    .quienes-img  { height:230px; }
+    .quienes-badge{ width:94px; height:94px; bottom:-14px; right:-8px; }
+    .quienes-badge-num { font-size:17px; }
+
+    /* mision */
+    #mision { grid-template-columns:1fr; }
+    .mv-card { padding:38px 20px; }
+    .mv-title{ font-size:19px; }
+
+    /* servicios */
+    .servicios-intro { flex-direction:column; }
+    .servicios-grid  { grid-template-columns:1fr 1fr; }
+    .s-card { padding:22px 14px; }
+    .s-num  { font-size:28px; }
+    .s-title{ font-size:12px; }
+
+    /* catalyst */
+    .catalyst-grid { grid-template-columns:1fr; gap:36px; }
+    .catalyst-highlight { padding:16px 18px; }
+
+    /* experiencia */
+    .exp-grid { grid-template-columns:1fr; gap:8px; }
+
+    /* equipos */
+    .tabs-wrap { width:100%; }
+    .tab-btn   { padding:7px 12px; font-size:10px; }
+    .tab-content.active { grid-template-columns:1fr; }
+
+    /* contacto */
+    .contacto-grid { grid-template-columns:1fr; gap:32px; }
+    .contacto-right{ padding:24px 18px; }
+
+    /* footer */
+    footer { flex-direction:column; align-items:flex-start; padding:18px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <svg viewBox="0 0 44 44" fill="none">
+      <path d="M22 10C15 10 10 15 10 22" stroke="#E36B1F" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M10 22C10 29 15 34 22 34" stroke="#4A90D9" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M22 34C29 34 34 29 34 22" stroke="#E36B1F" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M34 22C34 15 29 10 22 10" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">MGP</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#quienes">Quiénes Somos</a></li>
+    <li><a href="#mision">Misión &amp; Visión</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#catalyst">Catalyst Group</a></li>
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#equipos">Equipos</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══ MOBILE DRAWER ══ -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#quienes"     onclick="closeMenu()">Quiénes Somos</a>
+  <a href="#mision"      onclick="closeMenu()">Misión &amp; Visión</a>
+  <a href="#servicios"   onclick="closeMenu()">Servicios</a>
+  <a href="#catalyst"    onclick="closeMenu()">Catalyst Group</a>
+  <a href="#experiencia" onclick="closeMenu()">Experiencia</a>
+  <a href="#equipos"     onclick="closeMenu()">Equipos</a>
+  <a href="#contacto"    onclick="closeMenu()">Contacto</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-shape"></div>
+  <div class="hero-line"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="hero-tag">Industria Petrolera &amp; del Gas</span>
+      <h1 class="hero-title">
+        Soluciones IPC para la<br>
+        <span>Industria del Petróleo y Gas</span>
+      </h1>
+      <p class="hero-desc">
+        MGP, C.A. ofrece soluciones integrales de Ingeniería, Procura y Construcción para la industria petrolera, con equipos de alta calidad y personal especializado en toda América.
+      </p>
+      <a href="#servicios" class="hero-cta">
+        Ver Servicios
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">IPC</div><div class="stat-label">Ingeniería · Procura · Construcción</div></div>
+      <div class="stat"><div class="stat-num">América</div><div class="stat-label">Cobertura regional</div></div>
+      <div class="stat"><div class="stat-num">J-317527593</div><div class="stat-label">RIF Venezuela</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUIÉNES SOMOS ══ -->
+<section id="quienes" class="sec">
+  <div class="quienes-grid">
+    <div class="reveal">
+      <div class="quienes-visual">
+        <div class="quienes-img">
+          <svg viewBox="0 0 200 200" fill="none">
+            <rect x="20" y="80" width="160" height="100" rx="4" fill="white"/>
+            <rect x="40" y="40" width="20" height="60" fill="white"/>
+            <rect x="80" y="20" width="20" height="80" fill="white"/>
+            <rect x="120" y="50" width="20" height="50" fill="white"/>
+            <line x1="0" y1="180" x2="200" y2="180" stroke="white" stroke-width="6"/>
+          </svg>
+        </div>
+        <div class="quienes-badge">
+          <div class="quienes-badge-num">IPC</div>
+          <div class="quienes-badge-text">Expertos en Petróleo</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="reveal d1">
+        <div class="eyebrow">Quiénes Somos</div>
+        <h2 class="sec-title">Especialistas en Petróleo, Gas &amp; Minería</h2>
+      </div>
+      <div class="reveal d2">
+        <p class="sec-body">MGP, C.A. ha servido a la industria del Petróleo y sus derivados desde su fundación. Nuestra especialidad se basa en ofrecer soluciones integrales de Ingeniería, Procura y Construcción (IPC) para la Industria del Petróleo y del Gas.</p>
+        <br>
+        <p class="sec-body">Contamos con amplia experiencia en proveer a nuestros clientes de equipos, materiales, partes y componentes en distintas áreas: Petrolera, Industrial, Civil y Marítima. Personal altamente calificado para proyectos de alta gama.</p>
+      </div>
+      <div class="pills reveal d3">
+        <div class="pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E36B1F" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Petrolera</div>
+        <div class="pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E36B1F" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Industrial</div>
+        <div class="pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E36B1F" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Civil</div>
+        <div class="pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E36B1F" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Marítima</div>
+        <div class="pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E36B1F" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Minería</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ MISIÓN & VISIÓN ══ -->
+<section id="mision">
+  <div class="mv-card reveal">
+    <div class="mv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+    <div class="mv-label">Misión</div>
+    <div class="mv-title">Nuestra Razón de Ser</div>
+    <p class="mv-text">Lograr el posicionamiento entre las grandes industrias, establecer excelentes contrataciones con nuestros clientes forjando una cartera estable, que proporcione credibilidad ofreciendo los mejores servicios, material de alta calidad y personal calificado.</p>
+    <div class="mv-deco"></div>
+  </div>
+  <div class="mv-card reveal d1">
+    <div class="mv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+    <div class="mv-label">Visión</div>
+    <div class="mv-title">Hacia Dónde Vamos</div>
+    <p class="mv-text">Alcanzar el mayor reconocimiento en el mercado nacional e internacional. Prestando una eficiente y adecuada atención con personal altamente calificado, proporcionando estabilidad y crecimiento a nuestro país.</p>
+    <div class="mv-deco"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SERVICIOS ══ -->
+<section id="servicios" class="sec">
+  <div class="servicios-intro">
+    <div class="reveal">
+      <div class="eyebrow">Nuestros Servicios</div>
+      <h2 class="sec-title">Ingeniería, Procura<br>y Construcción</h2>
+    </div>
+    <p class="sec-body reveal d1" style="max-width:340px;">Ejecutamos proyectos desde diseño y planificación hasta entrega lista para funcionamiento y producción.</p>
+  </div>
+  <div class="servicios-grid">
+    <div class="s-card reveal"><div class="s-num">01</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg><div class="s-title">Sistemas de Tuberías y Estaciones de Bombeo</div><p class="s-text">Diseño, instalación y mantenimiento de sistemas completos.</p></div>
+    <div class="s-card reveal d1"><div class="s-num">02</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L8 8H3l4 5-1.5 7L12 17l6.5 3L17 13l4-5h-5z"/></svg><div class="s-title">Equipos de Perforación</div><p class="s-text">Suministro e instalación de equipos especializados.</p></div>
+    <div class="s-card reveal d2"><div class="s-num">03</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg><div class="s-title">Refinerías y Torres de Procesos Químicos</div><p class="s-text">Construcción y mantenimiento de refinerías y plantas.</p></div>
+    <div class="s-card reveal d3"><div class="s-num">04</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><div class="s-title">Plantas de Extracción de Gas</div><p class="s-text">Diseño e implementación de plantas de gas natural.</p></div>
+    <div class="s-card reveal"><div class="s-num">05</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div class="s-title">Recipientes a Presión e Intercambiadores</div><p class="s-text">Fabricación e instalación de recipientes industriales.</p></div>
+    <div class="s-card reveal d1"><div class="s-num">06</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><div class="s-title">Estaciones de Generación Eléctrica</div><p class="s-text">Instalación de estaciones de generación y transformación.</p></div>
+    <div class="s-card reveal d2"><div class="s-num">07</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><div class="s-title">Paradas de Planta</div><p class="s-text">Planificación y ejecución de mantenimientos mayores.</p></div>
+    <div class="s-card reveal d3"><div class="s-num">08</div><svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="6" height="4"/><rect x="9" y="3" width="6" height="4"/><rect x="16" y="3" width="6" height="4"/><rect x="2" y="10" width="6" height="4"/><rect x="9" y="10" width="6" height="4"/><rect x="16" y="10" width="6" height="4"/></svg><div class="s-title">Proyectos Mecánicos, Eléctricos y Estructurales</div><p class="s-text">Proyectos integrales según requerimientos del cliente.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ CATALYST GROUP ══ -->
+<section id="catalyst" class="sec">
+  <div class="catalyst-grid">
+    <div class="catalyst-left">
+      <div class="reveal">
+        <div class="eyebrow" style="color:var(--naranja)">MGP Catalyst Group</div>
+        <h2 class="sec-title white" style="margin-bottom:20px;">Recuperación y Comercialización de Metales</h2>
+      </div>
+      <div class="reveal d1">
+        <p class="catalyst-desc">
+          En MGP Catalyst Group, transformamos residuos industriales en recursos de alto valor. Nos especializamos en la recuperación y comercialización de metales a partir de catalizadores gastados y subproductos de la industria petrolera, extrayendo elementos estratégicos como vanadio, níquel y metales preciosos.
+        </p>
+        <p class="catalyst-desc">
+          Nuestro modelo integrado abarca la caracterización del material, la optimización de recuperación y la comercialización global, apoyado en alianzas con laboratorios y refinerías internacionales que garantizan precisión, transparencia y resultados óptimos.
+        </p>
+      </div>
+
+      <div class="reveal d2">
+        <div class="catalyst-highlight">
+          Convertimos pasivos industriales en activos estratégicos — alineando desarrollo industrial con crecimiento sostenible.
+        </div>
+      </div>
+
+      <div class="reveal d2">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px;">Metales Estratégicos</div>
+        <div class="catalyst-metals">
+          <div class="metal-tag">Vanadio</div>
+          <div class="metal-tag">Níquel</div>
+          <div class="metal-tag">Metales Preciosos</div>
+          <div class="metal-tag">Catalizadores Gastados</div>
+          <div class="metal-tag">Subproductos Petroleros</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="catalyst-right reveal d2">
+      <div class="impact-title">Impacto en el País</div>
+      <div class="impact-list">
+        <div class="impact-item">
+          <div class="impact-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="impact-text">
+            <strong>Remediación Ambiental</strong>
+            Reducción de pasivos industriales acumulados
+          </div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="impact-text">
+            <strong>Nuevas Fuentes de Ingreso</strong>
+            A partir de materiales subutilizados
+          </div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="impact-text">
+            <strong>Generación de Empleo Local</strong>
+            En sectores técnicos e industriales
+          </div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="impact-text">
+            <strong>Integración Global</strong>
+            Acceso a mercados internacionales de metales críticos
+          </div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="impact-text">
+            <strong>Economía Circular</strong>
+            Impulso a modelos sostenibles de producción
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPERIENCIA ══ -->
+<section id="experiencia" class="sec" style="background:var(--gris);">
+  <div class="exp-intro reveal">
+    <div class="eyebrow">Experiencia</div>
+    <h2 class="sec-title">Proyectos Ejecutados</h2>
+    <p class="sec-body" style="max-width:520px;">Trayectoria sólida respaldada por la ejecución de proyectos de alta complejidad en la industria petrolera nacional e internacional.</p>
+  </div>
+  <div class="exp-grid">
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Adquisición de Tuberías de diferentes Diámetros</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Adquisición de Accesorios de Tuberías</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Tubería de Perforación</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Adquisición de Materiales Mecánicos</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Instrumentos y Sistemas de Control</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Adquisición Materiales Eléctricos</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Motores Eléctricos</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Herramientas Especiales para Uso Petrolero</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Adquisición de Materiales H2S</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Adquisición de Componente Horno Claus</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Adquisición de Variadores de Frecuencia</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Adquisición de Cables para Macolla</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Materiales Metalmecánicos</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Empacaduras Térmicas para Pozos</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Cintas Transportadoras de 42" y 54"</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Sistema de Carnetización Automatizado</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Reentubado Caldera B200</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Recuperación Tren 2 de Azufre</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Remplazo de Motores Detroit Diésel</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Reemplazo Intercambiadores Área de Crudo</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Reemplazo dos Calderas Generación de Vapor</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Instalación de Ionic Exchange Reclaimer</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Instalación Caldera C y 2 Calderas adicionales</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Interconexión de Tanques</span></div>
+    <div class="exp-item reveal"><div class="exp-dot"></div><span class="exp-text">Reemplazo Sellos Tanque de Techos Flotantes</span></div>
+    <div class="exp-item reveal d1"><div class="exp-dot"></div><span class="exp-text">Suministro Instalación Bomba Respaldo 61-P-009C</span></div>
+    <div class="exp-item reveal d2"><div class="exp-dot"></div><span class="exp-text">Adquisición Equipos de Refrigeración</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ EQUIPOS ══ -->
+<section id="equipos" class="sec">
+  <div class="reveal" style="margin-bottom:28px;">
+    <div class="eyebrow">Catálogo</div>
+    <h2 class="sec-title">Equipos &amp; Materiales</h2>
+    <p class="sec-body" style="max-width:500px;">Localizamos, compramos y enviamos todo el equipo, partes y materiales requeridos de manera eficaz, a tiempo y al mejor costo.</p>
+  </div>
+  <div class="tabs-wrap reveal">
+    <button class="tab-btn active" onclick="showTab('petroleros',this)">Petrolera</button>
+    <button class="tab-btn" onclick="showTab('marinos',this)">Marinos</button>
+    <button class="tab-btn" onclick="showTab('valvulas',this)">Válvulas</button>
+    <button class="tab-btn" onclick="showTab('otros',this)">Otros</button>
+  </div>
+  <div id="tab-petroleros" class="tab-content active">
+    <div class="eq-item">Tuberías de diferentes Diámetros</div><div class="eq-item">Accesorios de Tuberías</div><div class="eq-item">Tubería de Perforación</div><div class="eq-item">Materiales Mecánicos</div><div class="eq-item">Instrumentos y Sistemas de Control</div><div class="eq-item">Materiales Eléctricos</div><div class="eq-item">Motores Eléctricos</div><div class="eq-item">Herramientas Especiales Petroleras</div><div class="eq-item">Materiales H2S</div><div class="eq-item">Componente Horno Claus</div><div class="eq-item">Materiales de Laboratorio</div><div class="eq-item">Variadores de Frecuencia</div><div class="eq-item">Cables para Macolla</div><div class="eq-item">Materiales Metalmecánicos</div><div class="eq-item">Empacaduras Térmicas para Pozos</div><div class="eq-item">Tambores Metálicos</div><div class="eq-item">Cables industriales</div><div class="eq-item">Cintas Transportadoras 42" y 54"</div><div class="eq-item">Rodamientos</div><div class="eq-item">Equipos de Refrigeración</div><div class="eq-item">Tubos para Calderas</div><div class="eq-item">Bombillos industriales</div>
+  </div>
+  <div id="tab-marinos" class="tab-content">
+    <div class="eq-item">Lanchas de trabajo</div><div class="eq-item">Gabarras</div><div class="eq-item">Remolcadores</div><div class="eq-item">Motores Marinos Diesel</div><div class="eq-item">Transmisiones</div><div class="eq-item">Instrumentos de Navegación</div><div class="eq-item">Propelas</div>
+  </div>
+  <div id="tab-valvulas" class="tab-content">
+    <div class="eq-item">Válvulas Bola</div><div class="eq-item">Válvula Compuerta</div><div class="eq-item">Válvula Check</div><div class="eq-item">Válvula de Paso</div><div class="eq-item">Válvula Retención</div><div class="eq-item">Válvula Expansión Alco</div><div class="eq-item">Válvula Control</div><div class="eq-item">Válvula Recirculación Automática</div><div class="eq-item">Válvula Doble Accionamiento</div><div class="eq-item">Válvulas especiales</div>
+  </div>
+  <div id="tab-otros" class="tab-content">
+    <div class="eq-item">Biseladoras</div><div class="eq-item">Materiales y Aleaciones Especiales</div><div class="eq-item">Repuestos para Motores</div><div class="eq-item">Bombas Sumergibles</div><div class="eq-item">Equipos para Construcción de Tuberías</div><div class="eq-item">Equipos para Tendido de Tuberías</div>
+  </div>
+</section>
+
+<!-- ══ CONTACTO ══ -->
+<section id="contacto" class="sec">
+  <div class="contacto-grid">
+    <div class="reveal">
+      <div class="eyebrow" style="color:var(--naranja)">Contacto</div>
+      <h2 class="sec-title white">Hablemos de<br>su Proyecto</h2>
+      <p class="contacto-desc">Nuestro equipo de profesionales está listo para dar soporte técnico y encontrar la solución que su industria necesita.</p>
+
+      <div class="contact-cards">
+        <!-- Lozano -->
+        <div class="contact-card reveal d1">
+          <div class="contact-card-name">D. Lozano</div>
+          <div class="contact-card-rows">
+            <div class="contact-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:lozano.d@mgp.com.ve">lozano.d@mgp.com.ve</a>
+            </div>
+            <div class="contact-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.34 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 5.55 5.55l1.83-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:+16479804966">+1 647 980 4966</a>
+            </div>
+          </div>
+        </div>
+        <!-- Solla -->
+        <div class="contact-card reveal d2">
+          <div class="contact-card-name">M. Solla</div>
+          <div class="contact-card-rows">
+            <div class="contact-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:solla.m@mgp.com.ve">solla.m@mgp.com.ve</a>
+            </div>
+            <div class="contact-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.34 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 5.55 5.55l1.83-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:+16477724561">+1 (647) 772-4561</a>
+            </div>
+          </div>
+        </div>
+        <!-- Colella -->
+        <div class="contact-card reveal d3">
+          <div class="contact-card-name">M. Colella</div>
+          <div class="contact-card-rows">
+            <div class="contact-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:colella.m@mgp.com.ve">colella.m@mgp.com.ve</a>
+            </div>
+            <div class="contact-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.34 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 5.55 5.55l1.83-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:+584126036958">+58 412 603 6958</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="address-block reveal d3">
+        <div class="address-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="address-label">Dirección</div>
+          <div class="address-value">Calle Doña Bárbara, entre Calle 6 y 7, Casa Nro. 7-44,<br>Sector Rómulo Gallegos, Lecherías,<br>Estado Anzoátegui — ZP 6016</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contacto-right reveal d2">
+      <h3>Envíenos un Mensaje</h3>
+      <div class="form-group"><label class="form-label">Nombre completo</label><input type="text" class="form-input" placeholder="Su nombre"></div>
+      <div class="form-group"><label class="form-label">Correo electrónico</label><input type="email" class="form-input" placeholder="correo@empresa.com"></div>
+      <div class="form-group"><label class="form-label">Empresa</label><input type="text" class="form-input" placeholder="Nombre de su empresa"></div>
+      <div class="form-group"><label class="form-label">Mensaje</label><textarea class="form-input" placeholder="Describa su requerimiento..."></textarea></div>
+      <button class="form-submit">Enviar Mensaje</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">MGP</div>
+  <div class="footer-copy">© 2025 MGP, C.A. — Todos los derechos reservados</div>
+  <div class="footer-rif">RIF: J-317527593</div>
+</footer>
+
+<script>
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+  document.addEventListener('click', e => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
+  });
+
+  // Reveal
+  new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 }).observe
+  // observe all
+  ;(function(){
+    const obs = new IntersectionObserver((entries, o) => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); o.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  })();
+
+  // Tabs
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
